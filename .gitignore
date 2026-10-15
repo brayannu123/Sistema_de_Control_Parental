@@ -1,4 +1,18 @@
+# Dependencias y compilación
 node_modules/
 dist/
-.env
 coverage/
+
+# Configuración y secretos locales
+.env
+.env.*
+!.env.example
+
+# Pruebas y utilidades locales de simulación
+/test/
+/scripts/
+
+# Repositorio y archivos temporales
+.git/
+*.log
+npm-debug.log*
