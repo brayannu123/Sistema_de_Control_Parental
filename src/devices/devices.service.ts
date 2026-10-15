@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
 import { randomInt } from 'crypto';
 import { Repository } from 'typeorm';
 import { Device } from './device.entity';
@@ -8,7 +9,7 @@ import { PairDeviceDto } from './dto/pair-device.dto';
 
 @Injectable()
 export class DevicesService {
-  constructor(@InjectRepository(Device) private readonly devices: Repository<Device>) {}
+  constructor(@InjectRepository(Device) private readonly devices: Repository<Device>, private readonly jwt: JwtService) {}
 
   async generateCode(parentId: string, dto: GenerateCodeDto) {
     for (let attempt = 0; attempt < 10; attempt++) {
@@ -41,6 +42,7 @@ export class DevicesService {
     if (!result.affected) throw new ConflictException('El código ya fue utilizado');
 
     const paired = await this.devices.findOneByOrFail({ id: device.id });
-    return { id: paired.id, deviceName: paired.deviceName, isPaired: paired.isPaired, parentId: paired.parentId };
+    const accessToken = await this.jwt.signAsync({ deviceId: paired.id }, { subject: paired.id, expiresIn: '30d' });
+    return { id: paired.id, deviceName: paired.deviceName, isPaired: paired.isPaired, parentId: paired.parentId, accessToken };
   }
 }

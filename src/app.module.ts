@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { DevicesModule } from './devices/devices.module';
 import { User } from './users/user.entity';
 import { Device } from './devices/device.entity';
+import { MonitoringModule } from './monitoring/monitoring.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { Device } from './devices/device.entity';
     }),
     AuthModule,
     DevicesModule,
+    MonitoringModule,
   ],
 })
 export class AppModule {}
