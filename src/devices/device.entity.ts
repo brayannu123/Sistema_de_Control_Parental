@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { StreamSession } from '../streams/stream-session.entity';
 import { User } from '../users/user.entity';
 
 @Entity('devices')
@@ -22,6 +23,9 @@ export class Device {
   @ManyToOne(() => User, (user) => user.devices, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'parentId' })
   parent: User;
+
+  @OneToMany(() => StreamSession, (session) => session.device)
+  streamSessions: StreamSession[];
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
